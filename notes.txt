@@ -1,0 +1,5 @@
+Another source to peruse
+
+OpenCV Python Tutorial #7 - Template Matching (Object Detection)
+Tech With Tim
+https://www.youtube.com/watch?v=T-0lZWYWE9Y
