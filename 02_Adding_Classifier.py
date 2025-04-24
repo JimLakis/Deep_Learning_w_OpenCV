@@ -17,25 +17,29 @@ def show_photo(image):
 def write_photo(image):
     cv2.imwrite("copy_photo.png", image) # save a new copy of the file to disk
     
-def run_classifier(bw_image):
+def run_classifier(bw_image):   # Identify where patterns (faces in this case) exist in image and transpose "square" over those locations in image
     import os
     import json
     import numpy as np
     
-    cascade_path = os.path.join(cv2.data.haarcascades, "haarcascade_frontalface_default.xml")
-    ## print(f"Looking for cascade file at: {cascade_path}")
-    # if not os.path.isfile(cascade_path):
-    #     raise Exception(f"Error: File does not exist at {cascade_path}")
+    valid_path_to_haarcascades = os.path.join(cv2.data.haarcascades, "haarcascade_frontalface_default.xml")
+    ## Author did not utilize os.path.join() to specify the location of the cv2.data.haarcascades attribute.
+    ## os.path.join() is a Python function that concatenates path components intelligently. It automatically inserts the appropriate path separator based on the operating system.
+    ## Author did not employ the following test/'if' statement, my addition.
+    if not os.path.isfile(valid_path_to_haarcascades):
+        raise Exception(f"Error: File does not exist at {valid_path_to_haarcascades}")
         
-    face_classifier = cv2.CascadeClassifier(cascade_path)
-    # if face_classifier.empty():
-    #     raise Exception("Error: face_classifier is empty after loading")
+    face_classifier = cv2.CascadeClassifier(valid_path_to_haarcascades)
+    ## Creating an object based on cv2.CascadeClassifier class. Its parameters are set via the importing/loading of the haarcascade XML file.
+    ## Author did not employ the following test/'if' statement, my addition.
+    if face_classifier.empty():
+        raise Exception("Error: face_classifier is empty after loading")
     
-    # Produce a list of coordinates for identified faces
     faces_coords = face_classifier.detectMultiScale(bw_image, scaleFactor=1.1, minNeighbors=5, minSize=(30,30))
-    # if face_classifier.empty():
-    #     raise Exception("Error: face_coords is empty after loading")
-    
+    ## faces_coords is a Numpy array of coordinates for where faces are identified. It's not a classic List.
+    if faces_coords is None and faces_coords.size < 1:
+        raise Exception("Error: face_coords is empty after loading")
+
     faces_list = []
     for (x, y, w, h) in faces_coords:
         faces_list.append({
@@ -44,8 +48,8 @@ def run_classifier(bw_image):
             "width": int(w),
             "height": int(h)
         })
-    with open("coords.txt", "w") as f:
-        json.dump(faces_list, f, indent=4)
+    with open("coords.txt", "w") as file_object:
+        json.dump(faces_list, file_object, indent=4)
         
     return faces_coords
 
