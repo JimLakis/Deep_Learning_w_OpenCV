@@ -79,7 +79,7 @@ def main():
         show_photo(original_image)
     if response == 2:   # Write image to a file
         write_photo(original_image)
-    if response == 3:   # Identify where patterns (faces in this case) exist in image and transpose "square" over faces in image
+    if response == 3:   # Identify where patterns (faces in this case) exist in image and transpose "square" over those locations in image
         face_coords = run_classifier(bw_image_object)
         transpose_face_coord_onto_orginal_image(face_coords, original_image)
         
